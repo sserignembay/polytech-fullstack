@@ -42,3 +42,15 @@ DELETE http://localhost:8080/films/1
 ### Identifiant inconnu — réponse attendue : 404 au format ProblemDetail
 GET http://localhost:8080/films/9999
 Accept: application/json
+
+### Filtre par genre
+GET http://localhost:8080/films?genre=SCIENCE_FICTION
+Accept: application/json
+
+### Filtre par realisateur
+GET http://localhost:8080/films?realisateur=Ridley Scott
+Accept: application/json
+
+### Filtrer par les deux
+GET http://localhost:8080/films?realisateur=Ridley Scott&genre=SCIENCE_FICTION
+Accept: application/json
