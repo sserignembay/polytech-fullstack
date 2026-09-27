@@ -17,11 +17,8 @@ public class FilmService{
 
 
     public Film getFilmById(Long id){
-        Film film = filmRepository.findById(id);
-        if(film == null){
-             throw new FilmNotFoundException(id);
-        }
-        return film;
+        return filmRepository.findById(id)
+               .orElseThrow(() -> new FilmNotFoundException(id));
     }
     
 
