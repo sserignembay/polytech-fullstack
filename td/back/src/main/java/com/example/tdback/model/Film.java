@@ -1,5 +1,8 @@
 package com.example.tdback.model;
+
 import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 
@@ -22,6 +28,14 @@ public class Film{
     private LocalDate dateSortie;
     @Enumerated(EnumType.STRING)                   
     private Genre genre;
+
+    @ManyToMany
+    @JoinTable(
+        name = "film_acteur",
+        joinColumns = @JoinColumn(name = "film_id"),
+        inverseJoinColumns = @JoinColumn(name = "acteur_id")
+    )
+    private List<Acteur> acteurs = new ArrayList<>();
 
     public Film(){
 
@@ -71,5 +85,15 @@ public void setGenre(Genre genre){
     this.genre = genre;
 }
     
+public List<Acteur> getActeurs(){
+    return acteurs;
+}
+public void setActeurs(List<Acteur> acteurs){
+    this.acteurs = acteurs;
+}
+public void addActeur(Acteur acteur){
+    this.acteurs.add(acteur);
+}
+
 
 }
