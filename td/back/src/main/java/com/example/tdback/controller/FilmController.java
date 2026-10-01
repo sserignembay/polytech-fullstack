@@ -1,25 +1,39 @@
 package com.example.tdback.controller;
-import com.example.tdback.model.Film;
-import com.example.tdback.service.FilmService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import com.example.tdback.model.Genre;
-import com.example.tdback.dto.FilmDto;
-import com.example.tdback.dto.FilmMapper;
-import com.example.tdback.dto.FilmCreationDto;
 import java.net.URI;
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.tdback.dto.ActeurDto;
+import com.example.tdback.dto.FilmCreationDto;
+import com.example.tdback.dto.FilmDto;
+import com.example.tdback.dto.FilmMapper;
+import com.example.tdback.model.Film;
+import com.example.tdback.model.Genre;
+import com.example.tdback.service.ActeurService;
+import com.example.tdback.service.FilmService;
 
 @RestController
 @RequestMapping("/films")
 public class FilmController{
     private final FilmService filmService;
     private final FilmMapper filmMapper;
+    private final ActeurService acteurService;
 
-    public FilmController(FilmService filmService, FilmMapper filmMapper){
-        this.filmService = filmService;
-        this.filmMapper = filmMapper;
-    }
+   public FilmController(FilmService filmService, FilmMapper filmMapper, ActeurService acteurService){
+    this.filmService = filmService;
+    this.filmMapper = filmMapper;
+    this.acteurService = acteurService;
+}
     @GetMapping
     public ResponseEntity<List<FilmDto>> getAllFilms(
         @RequestParam(required = false) String realisateur,
@@ -75,5 +89,9 @@ public class FilmController{
         filmService.retirerActeur(id, acteurId);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/{id}/acteurs")
+    public ResponseEntity<List<ActeurDto>> getActeursByFilm(@PathVariable Long id){
+    return ResponseEntity.ok(acteurService.findActeursByFilm(id));
+}
 
 }

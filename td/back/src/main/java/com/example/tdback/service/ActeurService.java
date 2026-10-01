@@ -1,24 +1,33 @@
 package com.example.tdback.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.tdback.dto.ActeurCreationDto;
 import com.example.tdback.dto.ActeurDto;
 import com.example.tdback.dto.ActeurMapper;
+import com.example.tdback.dto.FilmDto;
+import com.example.tdback.dto.FilmMapper;
 import com.example.tdback.exception.ActeurNotFoundException;
+import com.example.tdback.exception.FilmNotFoundException;
 import com.example.tdback.model.Acteur;
 import com.example.tdback.repository.ActeurRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
+import com.example.tdback.repository.FilmRepository;
 
 @Service
 public class ActeurService{
     private final ActeurRepository acteurRepository;
     private final ActeurMapper acteurMapper;
+    private final FilmRepository filmRepository;
+    private final FilmMapper filmMapper;
 
-    public ActeurService(ActeurRepository acteurRepository, ActeurMapper acteurMapper ){
+    public ActeurService(ActeurRepository acteurRepository, ActeurMapper acteurMapper,
+                         FilmRepository filmRepository, FilmMapper filmMapper){
         this.acteurRepository = acteurRepository;
         this.acteurMapper = acteurMapper;
+        this.filmRepository = filmRepository;
+        this.filmMapper = filmMapper;
     }
 
     public List<ActeurDto> findAll(){
@@ -27,22 +36,24 @@ public class ActeurService{
             .map(acteurMapper::toDto)
             .toList();
     }
+
     public ActeurDto findById(Long id){
         Acteur acteur = acteurRepository.findById(id)
             .orElseThrow(() -> new ActeurNotFoundException(id));
         return acteurMapper.toDto(acteur);
     }
+
     public ActeurDto create(ActeurCreationDto dto){
         Acteur saved = acteurRepository.save(acteurMapper.toEntity(dto));
         return acteurMapper.toDto(saved);
     }
+
     public ActeurDto update(Long id, ActeurCreationDto dto){
         Acteur acteur = acteurRepository.findById(id)
-             .orElseThrow(() -> new ActeurNotFoundException(id));
+            .orElseThrow(() -> new ActeurNotFoundException(id));
         acteur.setNom(dto.nom());
         acteur.setPrenom(dto.prenom());
         return acteurMapper.toDto(acteurRepository.save(acteur));
-
     }
 
     public void delete(Long id){
@@ -50,5 +61,25 @@ public class ActeurService{
             throw new ActeurNotFoundException(id);
         }
         acteurRepository.deleteById(id);
+    }
+
+    public List<FilmDto> findFilmsByActeur(Long acteurId){
+        if(!acteurRepository.existsById(acteurId)){
+            throw new ActeurNotFoundException(acteurId);
+        }
+        return filmRepository.findFilmsByActeur(acteurId)
+            .stream()
+            .map(filmMapper::toDto)
+            .toList();
+    }
+
+    public List<ActeurDto> findActeursByFilm(Long filmId){
+        if(!filmRepository.existsById(filmId)){
+            throw new FilmNotFoundException(filmId);
+        }
+        return acteurRepository.findActeursByFilm(filmId)
+            .stream()
+            .map(acteurMapper::toDto)
+            .toList();
     }
 }

@@ -5,6 +5,7 @@ import com.example.tdback.dto.ActeurDto;
 import com.example.tdback.service.ActeurService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.tdback.dto.FilmDto;
 
 import java.net.URI;
 import java.util.List;
@@ -43,5 +44,11 @@ public class ActeurController{
     public ResponseEntity<Void> deleteActeur(@PathVariable Long id){
         acteurService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/films")
+    public ResponseEntity<List<FilmDto>> getFilmsByActeur(@PathVariable Long id){
+        return ResponseEntity.ok(acteurService.findFilmsByActeur(id));
+        
     }
 }
