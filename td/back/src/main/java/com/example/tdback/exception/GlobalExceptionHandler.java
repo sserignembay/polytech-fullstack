@@ -13,4 +13,10 @@ public class GlobalExceptionHandler{
          problemDetail.setTitle("Film introuvable");
         return  problemDetail;
     }
+    @ExceptionHandler(ActeurNotFoundException.class)
+public ProblemDetail handleActeurNotFound(ActeurNotFoundException exception){
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
+    problemDetail.setTitle("Acteur introuvable");
+    return problemDetail;
+}
 }

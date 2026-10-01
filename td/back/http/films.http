@@ -54,3 +54,35 @@ Accept: application/json
 ### Filtrer par les deux
 GET http://localhost:8080/films?realisateur=Ridley Scott&genre=SCIENCE_FICTION
 Accept: application/json
+
+### Créer un acteur
+
+POST http://localhost:8080/acteurs
+Content-Type: application/json
+
+{
+  "nom": "DiCarpio"
+  "prenom" :"Leonardo"
+}
+
+### Lister les acteur
+GET http://localhost:8080/acteurs
+
+### Recuperer un acteur
+GET http://localhost:8080/acteurs/1
+
+###Modifier un acteur
+PUT http://localhost:8080/acteurs/1
+Content-Type: application/json
+
+{
+  "nom": "DiCarpio"
+  "prenom" :"Leo"
+}
+
+### Acteur inexistant  doit renvoye un 404
+GET http://localhost:8080/acteurs/999
+
+
+### supprimer un acteur
+DELETE http://localhost:8080/acteurs/1
