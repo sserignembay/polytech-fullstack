@@ -3,17 +3,28 @@ package com.example.tdback.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tdback.exception.ActeurNotFoundException;
 import com.example.tdback.exception.FilmNotFoundException;
+import com.example.tdback.model.Acteur;
 import com.example.tdback.model.Film;
-import com.example.tdback.repository.FilmRepository;
 import com.example.tdback.model.Genre;
+import com.example.tdback.repository.ActeurRepository;
+import com.example.tdback.repository.FilmRepository;
+
 @Service
 public class FilmService{
     private final FilmRepository filmRepository;
-    public FilmService(FilmRepository filmRepository){
-        this.filmRepository = filmRepository;
-    }
+    private final ActeurRepository acteurRepository;
+    
+     public FilmService(FilmRepository filmRepository, ActeurRepository acteurRepository){
+
+         this.filmRepository = filmRepository;
+          this.acteurRepository = acteurRepository;
+     }
+       
+    
 
 
     public Film getFilmById(Long id){
@@ -46,4 +57,20 @@ public class FilmService{
             .filter(film -> genre == null || film.getGenre() == genre)
             .toList();
     }
+    @Transactional
+    public void ajouterActeur(Long filmId, Long acteurId){
+        Film film = getFilmById(filmId);
+        Acteur acteur = acteurRepository.findById(acteurId)
+            .orElseThrow(() -> new ActeurNotFoundException(acteurId));
+        film.addActeur(acteur);
+    }
+
+    @Transactional
+    public void retirerActeur(Long filmId, Long acteurId){
+        Film film = getFilmById(filmId);
+        Acteur acteur = acteurRepository.findById(acteurId)
+            .orElseThrow(() -> new ActeurNotFoundException(acteurId));
+        film.getActeurs().remove(acteur);
+    }
+
 }

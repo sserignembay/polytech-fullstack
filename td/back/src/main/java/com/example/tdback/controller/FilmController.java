@@ -43,7 +43,7 @@ public class FilmController{
 
     @PostMapping
     public ResponseEntity<FilmDto> createFilm(@RequestBody FilmCreationDto creationDto){
-        Film film = filmMapper.toEntity(creationDto);
+        Film film = filmMapper.toEntity(creationDto);    // DTO reçu → entité
         Film createdFilm =filmService.createFilm(film);
         FilmDto dto = filmMapper.toDto(createdFilm);
         URI location = URI.create("/films/" + createdFilm.getId());
@@ -64,4 +64,16 @@ public class FilmController{
         filmService.deleteFilm(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping ("/{id}/acteurs/{acteurId}")
+    public ResponseEntity<Void> ajouterActeur(@PathVariable Long id, @PathVariable Long acteurId){
+        filmService.ajouterActeur(id, acteurId);
+        return ResponseEntity.noContent().build();
+    }
+     @DeleteMapping ("/{id}/acteurs/{acteurId}")
+    public ResponseEntity<Void> retirerActeur(@PathVariable Long id, @PathVariable Long acteurId){
+        filmService.retirerActeur(id, acteurId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

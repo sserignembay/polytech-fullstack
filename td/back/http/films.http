@@ -86,3 +86,12 @@ GET http://localhost:8080/acteurs/999
 
 ### supprimer un acteur
 DELETE http://localhost:8080/acteurs/1
+
+### Associer l'acteur 1 au film 1
+POST http://localhost:8080/films/1/acteurs/1
+
+### Dissocier l'acteur 1 du film 1
+DELETE http://localhost:8080/films/1/acteurs/1
+
+### Associer avec un acteur inexistant (doit renvoyer 404)
+POST http://localhost:8080/films/1/acteurs/999
