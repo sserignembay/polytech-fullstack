@@ -17,8 +17,6 @@ import com.example.tdback.dto.ActeurDto;
 import com.example.tdback.dto.FilmCreationDto;
 import com.example.tdback.dto.FilmDetailDto;
 import com.example.tdback.dto.FilmDto;
-import com.example.tdback.dto.FilmMapper;
-import com.example.tdback.model.Film;
 import com.example.tdback.model.Genre;
 import com.example.tdback.service.ActeurService;
 import com.example.tdback.service.FilmService;
@@ -27,25 +25,20 @@ import com.example.tdback.service.FilmService;
 @RequestMapping("/films")
 public class FilmController{
     private final FilmService filmService;
-    private final FilmMapper filmMapper;
+
     private final ActeurService acteurService;
 
-   public FilmController(FilmService filmService, FilmMapper filmMapper, ActeurService acteurService){
+   public FilmController(FilmService filmService, ActeurService acteurService){
     this.filmService = filmService;
-    this.filmMapper = filmMapper;
     this.acteurService = acteurService;
 }
+    
     @GetMapping
-    public ResponseEntity<List<FilmDto>> getAllFilms(
-        @RequestParam(required = false) String realisateur,
-        @RequestParam(required = false) Genre genre){
-            List<FilmDto> dtos = filmService.getAllFilms(realisateur, genre)
-            .stream()
-            .map(filmMapper::toDto)
-            .toList();
-      return ResponseEntity.ok(dtos);
-
-    }
+public ResponseEntity<List<FilmDto>> getAllFilms(
+    @RequestParam(required = false) String realisateur,
+    @RequestParam(required = false) Genre genre){
+    return ResponseEntity.ok(filmService.getAllFilms(realisateur, genre));
+}
        
     
 
@@ -54,23 +47,17 @@ public ResponseEntity<FilmDetailDto> getFilmById(@PathVariable Long id){
     return ResponseEntity.ok(filmService.getFilmDetail(id));
 }
 
-    @PostMapping
-    public ResponseEntity<FilmDto> createFilm(@RequestBody FilmCreationDto creationDto){
-        Film film = filmMapper.toEntity(creationDto);    // DTO reçu → entité
-        Film createdFilm =filmService.createFilm(film);
-        FilmDto dto = filmMapper.toDto(createdFilm);
-        URI location = URI.create("/films/" + createdFilm.getId());
-        return ResponseEntity.created(location).body(dto);
-    }
+ @PostMapping
+public ResponseEntity<FilmDto> createFilm(@RequestBody FilmCreationDto creationDto){
+    FilmDto created = filmService.createFilm(creationDto);
+    URI location = URI.create("/films/" + created.id());
+    return ResponseEntity.created(location).body(created);
+}
 
     @PutMapping("/{id}")
-    public ResponseEntity<FilmDto> updateFilm(@PathVariable Long id, @RequestBody FilmCreationDto creationDto ){
-        Film film = filmMapper.toEntity(creationDto);
-        Film updateFilm = filmService.updateFilm(id, film);
-        FilmDto dto = filmMapper.toDto(updateFilm);
-        return ResponseEntity.ok(dto);
-
-    }
+public ResponseEntity<FilmDto> updateFilm(@PathVariable Long id, @RequestBody FilmCreationDto creationDto){
+    return ResponseEntity.ok(filmService.updateFilm(id, creationDto));
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFilm(@PathVariable Long id){

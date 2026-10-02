@@ -61,7 +61,7 @@ POST http://localhost:8080/acteurs
 Content-Type: application/json
 
 {
-  "nom": "DiCarpio"
+  "nom": "DiCaprio",
   "prenom" :"Leonardo"
 }
 
@@ -95,3 +95,18 @@ DELETE http://localhost:8080/films/1/acteurs/1
 
 ### Associer avec un acteur inexistant (doit renvoyer 404)
 POST http://localhost:8080/films/1/acteurs/999
+
+### Lier l'acteur 1 au film 1
+POST http://localhost:8080/films/1/acteurs/1
+
+### Détail du film 1 (avec ses acteurs)
+GET http://localhost:8080/films/1
+
+### Acteurs du film 1
+GET http://localhost:8080/films/1/acteurs
+
+### Films de l'acteur 1
+GET http://localhost:8080/acteurs/1/films
+
+### Délier l'acteur 1 du film 1
+DELETE http://localhost:8080/films/1/acteurs/1
