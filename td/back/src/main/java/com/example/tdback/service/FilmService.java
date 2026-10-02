@@ -12,18 +12,20 @@ import com.example.tdback.model.Film;
 import com.example.tdback.model.Genre;
 import com.example.tdback.repository.ActeurRepository;
 import com.example.tdback.repository.FilmRepository;
+import com.example.tdback.dto.FilmDetailDto;
+import com.example.tdback.dto.FilmMapper;
 
 @Service
 public class FilmService{
     private final FilmRepository filmRepository;
     private final ActeurRepository acteurRepository;
+    private final FilmMapper filmMapper;
     
-     public FilmService(FilmRepository filmRepository, ActeurRepository acteurRepository){
-
-         this.filmRepository = filmRepository;
-          this.acteurRepository = acteurRepository;
-     }
-       
+         public FilmService(FilmRepository filmRepository, ActeurRepository acteurRepository, FilmMapper filmMapper){
+        this.filmRepository = filmRepository;
+        this.acteurRepository = acteurRepository;
+        this.filmMapper = filmMapper;
+    }
     
 
 
@@ -72,5 +74,9 @@ public class FilmService{
             .orElseThrow(() -> new ActeurNotFoundException(acteurId));
         film.getActeurs().remove(acteur);
     }
+    @Transactional(readOnly = true)
+public FilmDetailDto getFilmDetail(Long id){
+    return filmMapper.toDetailDto(getFilmById(id));
+}
 
 }

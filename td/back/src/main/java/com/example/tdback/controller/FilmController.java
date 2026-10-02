@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tdback.dto.ActeurDto;
 import com.example.tdback.dto.FilmCreationDto;
+import com.example.tdback.dto.FilmDetailDto;
 import com.example.tdback.dto.FilmDto;
 import com.example.tdback.dto.FilmMapper;
 import com.example.tdback.model.Film;
@@ -49,11 +50,9 @@ public class FilmController{
     
 
     @GetMapping("/{id}")
-    public ResponseEntity<FilmDto> getFilmById(@PathVariable Long id){
-        Film film =filmService.getFilmById(id);
-        return ResponseEntity.ok(filmMapper.toDto(film));
-
-    }
+public ResponseEntity<FilmDetailDto> getFilmById(@PathVariable Long id){
+    return ResponseEntity.ok(filmService.getFilmDetail(id));
+}
 
     @PostMapping
     public ResponseEntity<FilmDto> createFilm(@RequestBody FilmCreationDto creationDto){
